@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-// hacer variables de tareas //
+
 function Tareas() {
     const [lista, setLista] = useState([]);
     const [inputTarea, setInputTarea] = useState('');
     const [usuarioCreado, setUsuarioCreado] = useState(false);
-// useEffect Hook //
+    const [contadorId, setContadorId] = useState(0); // Contador para las tareas
+
     useEffect(() => {
         if (!usuarioCreado) {
             createUser();
@@ -17,31 +18,27 @@ function Tareas() {
         event.preventDefault();
         console.log("Creando tarea con título: ", inputTarea);
 
-        // Agregar la nueva tarea a la lista y actualizarla en el servidor
-        const nuevaTarea = { label: inputTarea, done: false };
+        // nueva tarea a la lista y actualizarla
+        const nuevaTarea = { id: contadorId, label: inputTarea, done: false }; // Asignar un ID único a cada tarea
         const listaActualizada = [...lista, nuevaTarea];
         setLista(listaActualizada);
+        setContadorId(contadorId + 1); // Contador//
 
-        // Actualizar la lista en el servidor
-        fetch("https://playground.4geeks.com/apis/fake/todos/user/<superteclas>", {
-            method: "PUT",
-            body: JSON.stringify(listaActualizada),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-        .then((response) => response.json())
-        .then((data) => console.log(data))
-        .catch((error) => console.log(error));
-
+        // Lista actualizada
+        actualizarListaEnServidor(listaActualizada);
+        
         setInputTarea('');
     };
-                         //borrar Tarea//
+
     const borrarTarea = (taskId) => {
         const listaActualizada = lista.filter((tarea) => tarea.id !== taskId);
         setLista(listaActualizada);
-
+        
         // Actualizar la lista en el servidor
+        actualizarListaEnServidor(listaActualizada);
+    };
+
+    const actualizarListaEnServidor = (listaActualizada) => {
         fetch("https://playground.4geeks.com/apis/fake/todos/user/<superteclas>", {
             method: "PUT",
             body: JSON.stringify(listaActualizada),
@@ -53,16 +50,7 @@ function Tareas() {
         .then((data) => console.log(data))
         .catch((error) => console.log(error));
     };
-
-    const tareasParaRenderizar = lista.map((tarea, index) => (
-        <li key={index}>
-            <div className="view">
-                <label>{tarea.label}</label>
-                <button className="destroy" onClick={() => borrarTarea(tarea.id)}></button>
-            </div>
-        </li>
-    ));
-
+//crear usuario//
     function createUser() {
         fetch("https://playground.4geeks.com/apis/fake/todos/user/<superteclas>", {
             method: "POST",
@@ -78,7 +66,7 @@ function Tareas() {
         })
         .catch((error) => console.log(error));
     }
-
+//tomar info//
     function getInfo() {
         fetch("https://playground.4geeks.com/apis/fake/todos/user/<superteclas>", {
             method: "GET",
@@ -92,6 +80,15 @@ function Tareas() {
         })
         .catch((error) => console.log(error));
     }
+
+    const tareasParaRenderizar = lista.map((tarea, index) => (
+        <li key={index}>
+            <div className="view">
+                <label>{tarea.label}</label>
+                <button className="destroy" onClick={() => borrarTarea(tarea.id)}></button>
+            </div>
+        </li>
+    ));
 
     return (
         <section className="todoapp">
@@ -122,3 +119,4 @@ function Tareas() {
 }
 
 export default Tareas;
+
