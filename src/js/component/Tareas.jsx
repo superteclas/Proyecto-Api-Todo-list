@@ -38,6 +38,12 @@ function Tareas() {
         actualizarListaEnServidor(listaActualizada);
     };
 
+    const borrarTodasLasTareas = () => {
+        setLista([]);
+        // Actualizar la lista vacía en el servidor
+        actualizarListaEnServidor([]);
+    };
+
     const actualizarListaEnServidor = (listaActualizada) => {
         fetch("https://playground.4geeks.com/apis/fake/todos/user/<superteclas>", {
             method: "PUT",
@@ -50,7 +56,8 @@ function Tareas() {
         .then((data) => console.log(data))
         .catch((error) => console.log(error));
     };
-//crear usuario//
+
+    //crear usuario//
     function createUser() {
         fetch("https://playground.4geeks.com/apis/fake/todos/user/<superteclas>", {
             method: "POST",
@@ -66,7 +73,8 @@ function Tareas() {
         })
         .catch((error) => console.log(error));
     }
-//tomar info//
+
+    //tomar info//
     function getInfo() {
         fetch("https://playground.4geeks.com/apis/fake/todos/user/<superteclas>", {
             method: "GET",
@@ -110,6 +118,7 @@ function Tareas() {
                 </ul>
             </section>
             <footer className="footer">
+                <button onClick={borrarTodasLasTareas}>Eliminar todas las tareas</button>
                 <span className="todo-count">
                     <strong>{lista.filter((tarea) => !tarea.done).length}</strong> tareas por hacer
                 </span>
@@ -119,4 +128,3 @@ function Tareas() {
 }
 
 export default Tareas;
-
