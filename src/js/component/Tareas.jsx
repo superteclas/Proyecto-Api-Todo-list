@@ -118,7 +118,7 @@ function Tareas() {
                 </ul>
             </section>
             <footer className="footer">
-                <button onClick={borrarTodasLasTareas}>Eliminar todas las tareas</button>
+            <button className="btn-eliminar" onClick={borrarTodasLasTareas}>Eliminar todas las tareas</button>
                 <span className="todo-count">
                     <strong>{lista.filter((tarea) => !tarea.done).length}</strong> tareas por hacer
                 </span>
